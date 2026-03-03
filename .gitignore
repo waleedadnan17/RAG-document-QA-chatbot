@@ -1,0 +1,32 @@
+# Environment
+.env
+.env.local
+venv/
+env/
+*.pyc
+__pycache__/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Project
+.streamlit/
+data/faiss_index.bin
+data/chunks.pkl
+data/metadata.json
+*.log
+
+# Test
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+*.egg-info/
+build/
+dist/

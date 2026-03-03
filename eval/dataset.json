@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the main topic of this document?",
+    "expected_answer": "The document covers key concepts related to the subject matter",
+    "key_facts": ["main topic", "document"],
+    "pdf_source": "sample.pdf"
+  },
+  {
+    "question": "Who are the key authors or figures mentioned?",
+    "expected_answer": "Various authors and figures are cited throughout the document",
+    "key_facts": ["authors", "figures"],
+    "pdf_source": "sample.pdf"
+  },
+  {
+    "question": "What are the main conclusions?",
+    "expected_answer": "The document concludes with important findings and recommendations",
+    "key_facts": ["conclusions", "findings"],
+    "pdf_source": "sample.pdf"
+  },
+  {
+    "question": "What evidence or data is presented?",
+    "expected_answer": "The document contains data and evidence supporting its claims",
+    "key_facts": ["evidence", "data"],
+    "pdf_source": "sample.pdf"
+  },
+  {
+    "question": "What are the limitations discussed?",
+    "expected_answer": "The document acknowledges certain limitations of its scope",
+    "key_facts": ["limitations", "scope"],
+    "pdf_source": "sample.pdf"
+  }
+]
