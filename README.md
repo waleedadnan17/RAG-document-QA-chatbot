@@ -1,168 +1,182 @@
-# RAG Document Q&A Chatbot
+# 📄 RAG Document Q&A Chatbot
 
-A production-ready Retrieval-Augmented Generation (RAG) system for AI-powered document question-answering.
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Tests](https://img.shields.io/badge/tests-pytest-green.svg)](https://pytest.org/)
+
+> **Upload PDFs → Ask Questions → Get Grounded Answers**
+
+A production-ready **Retrieval-Augmented Generation (RAG)** system for AI-powered document question-answering. Built with Streamlit, LangChain, FAISS, and local embeddings for full offline capability.
+
+### Key Features
+
+- 🚀 **Works Offline** — No API key required (uses local embeddings by default)
+- 📚 **Multi-Document Support** — Index multiple PDFs at once
+- 🔍 **Transparent Retrieval** — See which document chunks were used
+- 💬 **Conversation Memory** — Follow-up questions work naturally
+- 💾 **Persistent Index** — FAISS index saved to disk
+- 🎯 **Multiple Embedders** — OpenAI, Sentence-Transformers, or TF-IDF
+- 📊 **Evaluation Tools** — Built-in metrics for RAG quality
+- ✅ **Type-Safe & Tested** — Full type hints and test suite
+
+---
 
 ## Quick Start
 
-### 1. Setup
+### Prerequisites
+
+- Python 3.11 or higher
+- pip or conda
+- Git
+
+### 1️⃣ Clone & Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/rag-document-qa.git
+cd rag-document-qa
+
 # Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Activate (Windows)
+venv\Scripts\activate
+# Activate (macOS/Linux)
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Configure environment
-cp .env.example .env
 ```
 
-### 2. Run the App
+### 2️⃣ Run the App
 
 ```bash
 streamlit run app/streamlit_app.py
 ```
 
-The app will be available at `http://localhost:8501`.
+Open your browser to: **http://localhost:8501**
 
-### 3. Upload PDFs and Start Asking Questions
+### 3️⃣ Start Using It
 
-- Go to the sidebar and upload one or more PDF files
-- Configure chunking parameters if desired
-- Click "Index PDFs" to process the documents
-- Ask questions in the chat interface
-- View retrieved chunks and citations
+1. **Upload PDFs** via the sidebar (single or batch)
+2. **Click "Index PDFs"** to process documents (downloads embedding model on first run)
+3. **Ask questions** in the chat box
+4. **View sources** in the "Retrieved Chunks" expander
 
-## Features
+That's it! No API keys required. 🎉
 
-### 📄 Document Ingestion
-- Upload multiple PDFs at once
-- Automatic text extraction and cleaning
-- Configurable chunk size and overlap
-- Page number tracking for citations
+---
 
-### 🔍 RAG Retrieval
-- FAISS-based vector similarity search
-- Transparent chunk retrieval with similarity scores
-- Configurable top-k retrieval
-- Source citations in answers
+## 🎯 Features & Components
 
-### 💬 Conversation Memory
-- Context-aware follow-up questions
-- Rolling conversation history
-- Persistent session state
+| Feature | Details |
+|---------|---------|
+| 📄 **Ingestion** | Batch PDF upload, auto text extraction, configurable chunking |
+| 🔍 **Retrieval** | FAISS vector search, similarity scores, top-k configurable |
+| 💬 **Conversation** | Multi-turn chat, context memory, follow-up support |
+| 🧠 **Embeddings** | OpenAI, Sentence-Transformers (offline), or TF-IDF |
+| 📊 **Evaluation** | Retrieval recall, semantic similarity, LLM judge metrics |
+| 💾 **Persistence** | FAISS index saved to disk, auto-reload on restart |
 
-### 🧠 Multiple Embedding Models
-- **Auto mode** (default): Tries OpenAI, falls back to local models
-- **OpenAI**: `text-embedding-3-small` (requires API key)
-- **Sentence-Transformers**: `all-MiniLM-L6-v2` (100MB, fully offline)
-- **TF-IDF**: Lightweight fallback (no ML dependencies)
+---
 
-### 📊 Evaluation Suite
-- Retrieval recall metrics
-- Semantic similarity scoring
-- Optional LLM-as-judge evaluation
-- Structured results reporting
-
-### 💾 Persistence
-- FAISS index saved to disk
-- Automatic reloading on app restart
-- Metadata tracking (source, page, chunk info)
-
-## Project Structure
+## 📁 Project Structure
 
 ```
+rag-document-qa/
 ├── app/
-│   └── streamlit_app.py          # Main Streamlit UI
-├── rag/
-│   ├── __init__.py
-│   ├── pdf_loader.py             # PDF extraction (pypdf/pymupdf)
-│   ├── chunker.py                # Text chunking with overlap
-│   ├── embedder.py               # Embedding providers (OpenAI, ST, TF-IDF)
-│   ├── vectorstore.py            # FAISS management + persistence
-│   ├── qa.py                     # RAG question-answering chain
+│   ├── streamlit_app.py          # Main web UI
+│   └── config.py                 # Configuration
+├── rag/                          # Core RAG modules
+│   ├── pdf_loader.py             # PDF extraction
+│   ├── chunker.py                # Text chunking
+│   ├── embedder.py               # Embedding providers
+│   ├── vectorstore.py            # FAISS + persistence
+│   ├── qa.py                     # Q&A chain
 │   └── memory.py                 # Conversation memory
 ├── eval/
 │   ├── run_eval.py              # Evaluation script
-│   └── dataset.json             # Sample eval questions
+│   └── dataset.json             # Sample Q&A set
 ├── scripts/
-│   ├── build_index.py           # CLI for batch indexing
-│   └── query.py                 # CLI for single queries
+│   ├── build_index.py           # Batch indexing CLI
+│   └── query.py                 # Query CLI
 ├── tests/
-│   └── test_chunker.py          # Unit tests
-├── data/                        # FAISS index & metadata
+│   ├── test_chunker.py          # Unit tests
+│   └── test_integration.py      # Integration tests
+├── data/                        # FAISS index (auto-generated)
 ├── requirements.txt
 ├── .env.example
-└── README.md
+├── SETUP.md                     # Detailed setup guide
+└── README.md                    # This file
 ```
 
-## Configuration
+---
 
-### Chunking
+---
 
-Adjust in the Streamlit sidebar or `.env`:
+## ⚙️ Configuration
 
-```python
-CHUNK_SIZE=512        # Characters per chunk
-CHUNK_OVERLAP=50      # Overlap between chunks (for context)
-```
+### Environment Variables
 
-### Retrieval
+Copy `.env.example` to `.env`:
 
-```python
-TOP_K=5               # Number of chunks to retrieve
-TEMPERATURE=0.7       # LLM temperature (0=deterministic, 1=random)
-```
-
-### Embeddings
-
-**Option 1: OpenAI (Recommended for production)**
 ```bash
-export OPENAI_API_KEY="sk-..."
-# In .env: EMBEDDER_MODEL=openai
+cp .env.example .env
 ```
 
-**Option 2: Local with Sentence-Transformers (Best for privacy)**
+Key settings:
+
+```env
+# Embeddings (default: auto = uses local offline mode if no API key)
+EMBEDDER_MODEL=sentence-transformers    # openai | sentence-transformers | tfidf | auto
+OPENAI_API_KEY=                          # Leave empty for offline mode
+
+# LLM (for grounded answers)
+LLM_MODEL=gpt-3.5-turbo
+
+# Chunking
+CHUNK_SIZE=512                          # Characters per chunk
+CHUNK_OVERLAP=50                        # Context overlap
+
+# Retrieval
+TOP_K=5                                 # Results per query
+TEMPERATURE=0.7                         # LLM randomness
+MAX_TOKENS=1000                         # Response length
+```
+
+### Embedding Options
+
+| Mode | Setup | Speed | Quality | Cost |
+|------|-------|-------|---------|------|
+| **Sentence-Transformers** | `pip install sentence-transformers` | ~1sec | Good | Free |
+| **OpenAI** | Set `OPENAI_API_KEY` | ~0.5sec | Excellent | $ |
+| **TF-IDF** | Built-in | Fast | Fair | Free |
+| **Auto** | Tries above in order | Varies | Best available | Varies |
+
+### Offline Mode (Default)
+
+No setup needed! The system:
+1. Skips OpenAI if `OPENAI_API_KEY` not set
+2. Auto-downloads Sentence-Transformers model (~100MB, one-time)
+3. Runs completely offline with local embeddings
+
+---
+
+## 🚀 Usage Guide
+
+### Web Interface (Recommended)
+
 ```bash
-# No setup needed, downloads on first run
-# In .env: EMBEDDER_MODEL=sentence-transformers
+streamlit run app/streamlit_app.py
 ```
 
-**Option 3: Lightweight TF-IDF (Offline, minimal dependencies)**
-```bash
-# In .env: EMBEDDER_MODEL=tfidf
-```
-
-**Option 4: Auto (Default, tries all)**
-```bash
-# In .env: EMBEDDER_MODEL=auto
-# Tries OpenAI → Sentence-Transformers → TF-IDF
-```
-
-## Offline Mode
-
-The system supports full offline operation:
-
-1. Install `sentence-transformers`:
-   ```bash
-   pip install sentence-transformers
-   ```
-
-2. Do NOT set `OPENAI_API_KEY` in `.env`
-
-3. Run the app—it will automatically use the local embedding model
-
-4. The model (100MB, `all-MiniLM-L6-v2`) downloads once on first use
-
-## Usage Examples
-
-### Web UI (Recommended)
-
-1. Open `http://localhost:8501` after running `streamlit run app/streamlit_app.py`
-2. Upload PDFs
-3. Ask questions in the chat interface
-4. View sources and retrieved chunks
+Then open http://localhost:8501 and:
+1. **Upload** PDFs via sidebar (single or batch)
+2. **Configure** chunking, embedding model, top-k
+3. **Index** by clicking "Index PDFs"
+4. **Chat** with your documents
+5. **Explore** retrieved chunks with similarity scores
 
 ### CLI: Build Index
 
@@ -180,7 +194,7 @@ python scripts/build_index.py \
 python scripts/query.py "What is the main topic?" --top-k 5 --embedder auto
 ```
 
-### Evaluation
+### CLI: Evaluate
 
 ```bash
 # Generate evaluation report
@@ -189,140 +203,196 @@ python eval/run_eval.py --dataset eval/dataset.json --use-llm-judge
 # Results saved to eval_results.json
 ```
 
-## How Persistence Works
+### Programmatic Usage
 
-The system saves this to the `data/` directory:
+```python
+from rag.embedder import get_embedder
+from rag.vectorstore import FAISSVectorStore
+from rag.qa import RAGChain
 
-- **faiss_index.bin** — FAISS index (binary vector database)
-- **chunks.pkl** — Serialized chunk metadata
-- **metadata.json** — Human-readable index info (sources, pages, previews)
+# Initialize
+embedder = get_embedder("auto")
+vectorstore = FAISSVectorStore(embedder)
+qa = RAGChain(vectorstore)
 
-On app restart, these are automatically reloaded. To clear:
-
-👉 Click **"Clear Index"** in the sidebar, or delete the `data/` folder.
-
-## Evaluation
-
-### Metrics
-
-1. **Retrieval Recall** — Fraction of key facts found in retrieved chunks
-2. **Answer Length** — Characters in generated answer
-3. **Semantic Similarity** — Cosine similarity between answer and expected answer
-4. **LLM Judge Scores** (optional) — Faithfulness, relevance, completeness (1-5 scale)
-
-### Running Evaluation
-
-1. Prepare your dataset in `eval/dataset.json` with format:
-   ```json
-   {
-     "question": "What is X?",
-     "expected_answer": "X is...",
-     "key_facts": ["fact1", "fact2"],
-     "pdf_source": "doc.pdf"
-   }
-   ```
-
-2. Run:
-   ```bash
-   python eval/run_eval.py --use-llm-judge --output eval_results.json
-   ```
-
-3. View results:
-   ```bash
-   cat eval_results.json
-   ```
-
-## Demo Questions
-
-For a sample academic or technical PDF, try:
-
-1. **What are the main findings?**
-2. **Summarize the methodology used in this research.**
-3. **What are the limitations of this study?**
-4. **Who are the authors and their affiliations?**
-5. **What recommendations does the document make?**
-
-## Design Tradeoffs
-
-### Chunking
-- **Strategy**: Fixed-size chunks with overlap
-- **Rationale**: Simple, predictable, preserves local context
-- **Alternative**: Dynamic (sentence-based) — more complex but better semantic boundaries
-
-### Retrieval
-- **Vector DB**: FAISS (CPU)
-- **Rationale**: Fast, lightweight, no server needed
-- **Alternative**: Pinecone/Weaviate — managed, scalable but requires cloud
-
-### Grounding
-- **Approach**: Explicit context injection in prompt + citation
-- **Rationale**: Transparent, auditable, reduces hallucinations
-- **Alternative**: Fine-tuning — better performance but expensive
-
-### Offline Fallback
-- **Stack**: Sentence-Transformers + TF-IDF
-- **Rationale**: Works without API keys, no data leaves user's machine
-- **Alternative**: Always require OpenAI — simpler but less flexible
-
-### Evaluation
-- **Lightweight setup**: No external eval platforms
-- **Rationale**: Easy to run locally, suitable for prototyping
-- **Alternative**: Ragas/LangSmith — richer but adds overhead
-
-## Requirements
-
-- Python 3.11+
-- pip or conda
-- 2GB+ disk space (for FAISS index + Sentence-Transformer model if used)
-- OpenAI API key (optional, for OpenAI embeddings + GPT answers)
-
-## Troubleshooting
-
-### "ModuleNotFoundError: No module named 'faiss'"
-```bash
-pip install faiss-cpu  # or faiss-gpu if you have CUDA
+# Query
+answer, retrieved, sources = qa.answer_question("Your question?")
+print(f"Answer: {answer}")
+print(f"{sources}")
 ```
 
-### "No module named 'sentence_transformers'"
-```bash
-pip install sentence-transformers
-```
-
-### "OPENAI_API_KEY not set"
-- Set in `.env` or environment
-- Or use offline mode (leave blank and use Sentence-Transformers)
-
-### "Index is empty"
-- Upload PDFs in the Streamlit sidebar
-- Click "Index PDFs" to process them
-- Wait for the success message
-
-### App crashes on PDF upload
-- Check PDF file is valid
-- Try with a smaller PDF first
-- Check console for error details
-
-## Next Steps
-
-- [ ] Add support for more document formats (DOCX, TXT)
-- [ ] Implement advanced chunking (semantic, recursive)
-- [ ] Add query expansion and hybrid retrieval
-- [ ] Support for multi-document QA
-- [ ] Fine-tune embeddings on domain data
-- [ ] Add user feedback loop for RLHF
-- [ ] Deploy with Docker/Streamlit Cloud
-
-## License
-
-MIT
-
-## Support
-
-For issues, feature requests, or questions:
-1. Check troubleshooting section above
-2. Review the code comments
-3. Run tests: `pytest tests/`
+See [examples.py](examples.py) for more detailed examples.
 
 ---
 
-Built with ❤️ for document-grounded AI
+## 💾 Data Persistence
+
+The `data/` folder automatically stores:
+
+- `faiss_index.bin` — Vector database
+- `chunks.pkl` — Chunk metadata  
+- `metadata.json` — Human-readable info
+
+**To reset:**
+```bash
+rm -rf data/  # Delete folder, or click "Clear Index" in app
+```
+
+---
+
+---
+
+## 📊 Evaluation
+
+### Metrics
+
+- **Retrieval Recall** — % of key facts in retrieved chunks
+- **Semantic Similarity** — Answer vs expected answer similarity
+- **Answer Length** — Character count
+- **LLM Judge** (optional) — Faithfulness, relevance, completeness scores
+
+### Dataset Format
+
+```json
+[
+  {
+    "question": "What is X?",
+    "expected_answer": "X is...",
+    "key_facts": ["fact1", "fact2"]
+  }
+]
+```
+
+### Run Evaluation
+
+```bash
+python eval/run_eval.py --dataset eval/dataset.json --use-llm-judge
+```
+
+---
+
+## 🏗️ Architecture & Design
+
+### Key Decisions
+
+| Component | Choice | Why |
+|-----------|--------|-----|
+| **Chunking** | Fixed-size + overlap | Simple, fast, predictable |
+| **Vector DB** | FAISS | Lightweight, no server, fast |
+| **Retrieval** | Similarity search | Works with any embeddings |
+| **Grounding** | Context + citations | Transparent, reduces hallucination |
+| **Offline** | Sentence-Transformers+TF-IDF | Private, no API keys |
+| **Evaluation** | Local metrics | Fast iteration, no platform needed |
+
+### Data Flow
+
+```
+PDF Upload
+    ↓
+Text Extraction (pypdf/pymupdf)
+    ↓
+Text Chunking (512 chars, 50 overlap)
+    ↓
+Embedding (local or OpenAI)
+    ↓
+FAISS Index (saved to disk)
+    ↓
+Retrieval (similarity search)
+    ↓
+RAG Chain (prompt + context)
+    ↓
+Answer (with citations)
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ --cov=rag
+
+# Run specific test
+pytest tests/test_chunker.py::test_chunking_basic
+```
+
+---
+
+## 📋 Requirements
+
+- **Python** 3.11+
+- **Disk** 2GB+ (for models)
+- **RAM** 4GB+ (recommended)
+- **API Key** Optional OPENAI_API_KEY
+
+Install with:
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 🐛 Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| ModuleNotFoundError faiss | `pip install faiss-cpu` |
+| Model download slow | Normal (~100MB first time, then cached) |
+| "Index is empty" | Upload PDFs and click "Index" first |
+| OpenAI errors | Leave `OPENAI_API_KEY` empty for offline mode |
+| PDF extraction fails | Try a different PDF or check if valid |
+
+See [SETUP.md](SETUP.md) for detailed help.
+
+---
+
+## 🚀 Roadmap
+
+- [ ] Support DOCX, TXT, HTML formats
+- [ ] Semantic/recursive chunking
+- [ ] Query expansion
+- [ ] Hybrid (BM25 + vector) retrieval
+- [ ] Fine-tuned embeddings
+- [ ] Multi-document reasoning
+- [ ] Docker support
+- [ ] Streamlit Cloud deployment
+
+---
+
+## 📄 License
+
+[MIT License](LICENSE) — Feel free to use in personal and commercial projects.
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 💬 Questions?
+
+- **Setup help** → See [SETUP.md](SETUP.md)
+- **Code examples** → Check [examples.py](examples.py)
+- **Issues** → Use GitHub Issues
+- **Discussions** → Use GitHub Discussions
+
+---
+
+<div align="center">
+
+**Built with ❤️ using LangChain, FAISS, and Streamlit**
+
+If you found this useful, please ⭐ star the repo!
+
+</div>
